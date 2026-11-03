@@ -21,13 +21,25 @@ jobs:
           python-version: '3.11'
 
       - name: Install build tools
-        run: python -m pip install numpy pillow pyinstaller
+        run: python -m pip install numpy pillow pyinstaller pip-licenses
 
       - name: Build token-clock.exe
         run: >
           pyinstaller window/launch.py --name token-clock --onedir --noconsole --noconfirm --noupx
           --paths window --hidden-import window
           --add-data "window/*.png;window" --add-data "center/*.png;center"
+
+      # The exe redistributes Python, NumPy (with OpenBLAS), Pillow and the PyInstaller bootloader, so their licences ship with it
+      - name: Third-party notices
+        shell: pwsh
+        run: |
+          $out = 'dist/token-clock/THIRD-PARTY-NOTICES.txt'
+          python -m piplicenses --packages numpy pillow pyinstaller --with-license-file --no-license-path --format=plain-vertical --output-file $out
+          $py = Join-Path (python -c "import sys; print(sys.base_prefix)") 'LICENSE.txt'
+          if (-not (Test-Path $py)) { throw "Python LICENSE.txt not found at $py" }
+          Add-Content $out "`n`nPython $(python -c "import platform; print(platform.python_version())")`n"
+          Get-Content $py | Add-Content $out
+          foreach ($name in 'numpy', 'pillow', 'pyinstaller', 'Python') { if (-not (Select-String -Path $out -Pattern "^$name" -Quiet)) { throw "notice missing: $name" } }
 
       - name: Zip and checksum
         shell: pwsh
