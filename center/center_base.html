@@ -1,0 +1,87 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>중앙 시계 원판</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Semi+Condensed:wght@400;500&display=swap">
+<style>
+/* 크로노그래프 구조: 숫자는 바깥 링으로 나가고, 판 안쪽은 깎은 막대 표시와 작은 다이얼이 차지한다. 큰 다이얼은 5시간, 왼쪽 WEEK, 오른쪽 CHAT */
+:root { --ink: #f3f6fa; --ring-ink: #c6ccd5; --red: #e8301f; --lit: 24, 112, 255; --face: "Saira Semi Condensed" }
+html, body { margin: 0; background: transparent }
+#판 { position: relative; width: 420px; height: 470px; overflow: hidden }
+.w { position: absolute; border-radius: 50%; filter: drop-shadow(0 7px 9px rgba(0, 0, 0, .62)) }
+.w img { position: absolute; inset: 0; width: 100%; height: 100%; display: block }
+.w > svg, .s svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible }
+/* 바깥 링: 도자기처럼 어둡고 매끈한 띠. 비스듬한 광택이 두 군데 지나가고 안쪽 턱에 가는 금속선이 돈다 */
+.링 { position: absolute; inset: 15px; border-radius: 50%; background: conic-gradient(from 20deg, #0a0c10 0, #14171d 7%, #2b3039 12%, #14171d 18%, #0a0c10 34%, #0c0e13 52%, #20242c 60%, #0c0e13 68%, #0a0c10 100%);
+  -webkit-mask: radial-gradient(closest-side, transparent 88.6%, #000 88.9%, #000 99.4%, transparent 100%) }
+.턱 { position: absolute; inset: 33px; border-radius: 50%; box-shadow: 0 0 0 .7px rgba(226, 232, 240, .62), 0 0 0 1.5px rgba(0, 0, 0, .75), 0 1.5px 4px 1.6px rgba(0, 0, 0, .7) }
+/* 흰 시계(lt): 사진의 금속 결을 살려 판을 희게 올리고, 글자·눈금·작은 다이얼을 함께 뒤집는다. 금속 테와 디지털 창은 그대로다 */
+body.lt { --ink: #15171b; --ring-ink: #2b2e34 }
+.w img.판속 { display: none }
+body.lt .w img.판속 { display: block }
+.w img.판속 { clip-path: circle(137px at 50% 50%); filter: grayscale(1) brightness(5.2) contrast(.16) brightness(1.62) }
+body.lt .링 { background: conic-gradient(from 20deg, #d6d8dc 0, #e6e8ea 7%, #f6f7f8 12%, #e6e8ea 18%, #d3d5d9 34%, #d8dade 52%, #eceef0 60%, #d8dade 68%, #d6d8dc 100%) }
+body.lt line[stroke="#dfe4ea"], body.lt line[stroke="#eef2f7"] { stroke: #1d2025 }
+body.lt path.면[fill="url(#밝은면)"] { fill: #5a5e65 } body.lt path.면[fill="url(#어둔면)"] { fill: #1a1c20 }
+body.lt .턱 { box-shadow: 0 0 0 .7px rgba(40, 44, 50, .55), 0 0 0 1.5px rgba(255, 255, 255, .5), 0 1px 3px 1px rgba(0, 0, 0, .22) }
+body.lt .겉선 { box-shadow: inset 0 0 0 .6px rgba(0, 0, 0, .4), inset 0 1px 3px rgba(0, 0, 0, .3) }
+body.lt .띠 { mix-blend-mode: multiply }
+/* 평소에는 오른쪽 띠 빛을 두지 않는다. 눌렀을 때의 빛 층에서만 띠가 켜진다 */
+body:not(.glow):not(.ring) .띠 { display: none }
+body.lt .홈 { background: repeating-radial-gradient(circle, rgba(0, 0, 0, .05) 0 .3px, transparent .3px 1.05px), radial-gradient(closest-side, #e6e7ea 0, #f1f2f4 70%, #dfe1e4 94%, #d0d3d7 100%); box-shadow: 0 0 0 .7px rgba(50, 54, 60, .7), 0 0 0 1.6px rgba(150, 154, 160, .9), 0 1px 3px 1px rgba(0, 0, 0, .35), inset 0 2px 4px rgba(0, 0, 0, .28) }
+/* 금속 테 오른쪽 아래의 어두운 반사를 밝혀 둘레 밝기를 고르게 한다 */
+.테보정 { position: absolute; inset: 0; border-radius: 50%; mix-blend-mode: screen; background: conic-gradient(from 0deg, transparent 52deg, rgba(190, 195, 202, .28) 76deg, rgba(190, 195, 202, .7) 100deg, rgba(190, 195, 202, .68) 118deg, rgba(190, 195, 202, .5) 140deg, rgba(190, 195, 202, .24) 164deg, transparent 186deg); -webkit-mask: radial-gradient(closest-side, transparent 90.6%, #000 91.6%, #000 99%, transparent 100%) }
+body.glow .테보정 { display: none }
+.겉선 { position: absolute; inset: 15px; border-radius: 50%; box-shadow: inset 0 0 0 .6px rgba(0, 0, 0, .9), inset 0 1px 3px rgba(0, 0, 0, .8) }
+.띠 { position: absolute; inset: 7.7%; border-radius: 50%; mix-blend-mode: screen; background: conic-gradient(from 345deg, transparent 0, rgba(var(--lit), .08) 8%, rgba(var(--lit), .5) 19%, rgba(120, 175, 255, .62) 23%, rgba(var(--lit), .5) 27%, rgba(var(--lit), .08) 40%, transparent 50%);
+  -webkit-mask: radial-gradient(closest-side, transparent 89%, rgba(0, 0, 0, .35) 93%, rgba(0, 0, 0, .75) 97%, rgba(0, 0, 0, .3) 99%, transparent 100%); filter: blur(.5px) }
+.링글 { font-family: var(--face), sans-serif; font-weight: 400; fill: var(--ring-ink); letter-spacing: .04em }
+.num { font-family: var(--face), sans-serif; font-weight: 500; fill: var(--ink) }
+/* 날짜창처럼 판에 뚫린 얇은 창. 디지털 시간이 여기에 뜬다 */
+.창 { position: absolute; left: 177px; top: 262px; width: 66px; height: 24px; border-radius: 2px; background: linear-gradient(180deg, #030406, #0a0c10); box-shadow: 0 0 0 .8px #0a0b0d, 0 0 0 1.7px #b4b8be, 0 0 0 2.4px #2c2e33, inset 0 2px 3px rgba(0, 0, 0, .9) }
+/* 작은 다이얼: 판을 파낸 것처럼 안쪽 그림자를 두고 동심원 결을 넣는다 */
+.s { position: absolute; border-radius: 50% }
+.홈 { position: absolute; inset: 0; border-radius: 50%; background: repeating-radial-gradient(circle, rgba(255, 255, 255, .055) 0 .3px, transparent .3px 1.05px), radial-gradient(closest-side, #0b0c0f 0, #101216 70%, #181a1f 94%, #22242a 100%); box-shadow: 0 0 0 .7px rgba(232, 236, 242, .7), 0 0 0 1.6px rgba(24, 26, 30, .95), 0 1px 4px 2px rgba(0, 0, 0, .78), inset 0 3px 6px rgba(0, 0, 0, .78) }
+.lab { position: absolute; left: 50%; top: 31%; transform: translate(-50%, -50%); font-family: var(--face), sans-serif; font-weight: 500; font-size: 7.4px; color: var(--ring-ink); letter-spacing: .16em; padding-left: .16em }
+body.m .s, body.m0 .w, body.m1 .w, body.m0 .창, body.m1 .창, body.m0 .s.b, body.m1 .s.a { display: none }
+body.glow .w { filter: none } body.glow .w img, body.glow .창, body.glow .턱, body.glow .겉선 { display: none }
+body.glow .링 { background: rgba(10, 34, 104, .36) }
+/* 눌렀을 때 빛은 둘레 어디나 같은 세기로 둔다. 한쪽 뜨거운 점이 있으면 반대쪽이 튀어 균형이 깨진다 */
+body.glow .띠 { mix-blend-mode: normal; filter: blur(1.2px); background: rgba(40, 125, 255, .62);
+  -webkit-mask: radial-gradient(closest-side, transparent 84%, rgba(0, 0, 0, .45) 90%, rgba(0, 0, 0, .85) 95%, rgba(0, 0, 0, .45) 98.5%, transparent 100%) }
+body.glow svg { filter: drop-shadow(0 0 1px #cfe9ff) drop-shadow(0 0 3px #2f8cff) drop-shadow(0 0 8px #1560ff) }
+body.glow line, body.glow .면 { stroke: #f6fcff !important; fill: #f6fcff !important; opacity: 1 !important } body.glow text { fill: #eef8ff !important }
+/* 삼각형은 흰 판으로 칠하지 않고 능선과 양쪽 면을 살린 채 차가운 빛을 받은 금속으로 둔다 */
+body.glow .홈 { background: radial-gradient(closest-side, #071a4a 0, #0d3596 30%, #1c6cff 60%, #7cc6ff 86%, #e9f7ff 96%, #2a7dff 100%); box-shadow: 0 0 14px 3px rgba(40, 130, 255, .85) }
+body.glow .lab { color: #fff; text-shadow: 0 0 5px #6fb8ff }
+</style>
+<div id="판"></div>
+<script>
+if (location.hash) document.body.classList.add(...location.hash.slice(1).split("-"));
+const 판 = document.getElementById("판"), 라디안 = 도 => 도 * Math.PI / 180, 각도 = v => -135 + 270 * v / 100;
+/* 바깥 링의 눈금과 숫자. 눈금은 1칸마다 머리카락처럼 가늘게, 숫자는 아주 작게 원을 따라 눕힌다 */
+function 링(r) { let s = "", 글 = ""; const 바깥 = 153.6;
+  for (let v = 0; v <= 100; v++) { const a = 라디안(각도(v)), x = Math.sin(a), y = -Math.cos(a), 십 = v % 10 === 0, 오 = v % 5 === 0, 빨 = v >= 80, 길 = 십 ? 5.4 : 오 ? 3.8 : 2.4;
+    s += `<line x1="${x * 바깥}" y1="${y * 바깥}" x2="${x * (바깥 - 길)}" y2="${y * (바깥 - 길)}" stroke="${빨 ? "#d8452f" : "#dfe4ea"}" stroke-width="${십 ? .9 : 오 ? .6 : .32}" opacity="${십 ? .95 : 오 ? .75 : .55}"/>` }
+  for (let v = 0; v <= 100; v += 10) { const 도 = 각도(v), a = 라디안(도), n = 141.8, x = Math.sin(a) * n, y = -Math.cos(a) * n, 눕 = Math.abs(도) > 100 ? 도 + 180 : 도;
+    글 += `<text class="링글" x="${x}" y="${y}" dy=".35em" text-anchor="middle" transform="rotate(${눕} ${x} ${y})" style="font-size:7.8px${v >= 80 ? ";fill:#dc5240" : ""}">${v}</text>` }
+  return `<svg viewBox="${-r} ${-r} ${2 * r} ${2 * r}"><g>${s}</g><g style="filter:drop-shadow(0 .4px .5px rgba(0,0,0,.9))">${글}</g></svg>` }
+/* 안쪽 막대 표시: 가운데 능선을 두고 양쪽 면의 밝기를 달리해 깎은 금속처럼 보이게 한다 */
+function 막대(r) { let s = ""; const 안 = 121;
+  /* 막대는 바깥 링의 숫자와 같은 값에 둔다. 20과 80은 작은 다이얼을 가리지 않게 짧게 둔다 */
+  for (const v of [0, 10, 20, 30, 40, 60, 70, 80, 90, 100]) { const 도 = 각도(v), 짧은 = v === 20 || v === 80, 넓 = v % 50 === 0 ? 3.2 : 짧은 ? 2.1 : 2.5, 붉 = v >= 80, 끝 = 짧은 ? 113 : 103;
+    s += `<g transform="rotate(${도})"><path class="면" d="M${-넓} ${-안} L0 ${-안 - .8} L0 ${-끝 + .8} L${-넓} ${-끝} Z" fill="url(#밝은면)"/><path class="면" d="M${넓} ${-안} L0 ${-안 - .8} L0 ${-끝 + .8} L${넓} ${-끝} Z" fill="url(#어둔면)"/><rect class="면" x="-.9" y="${-안 + 2.4}" width="1.8" height="${안 - 끝 - 4.8}" rx=".6" fill="${붉 ? "#e8493a" : "#f8fbff"}"/></g>` }
+  return `<svg viewBox="${-r} ${-r} ${2 * r} ${2 * r}"><defs><linearGradient id="밝은면" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8d9299"/><stop offset="1" stop-color="#f4f6f8"/></linearGradient><linearGradient id="어둔면" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#b4b8bf"/><stop offset="1" stop-color="#43464c"/></linearGradient><linearGradient id="빛밝은면" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5f97ec"/><stop offset="1" stop-color="#f4fbff"/></linearGradient><linearGradient id="빛어둔면" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#cfe6ff"/><stop offset="1" stop-color="#2c5fbd"/></linearGradient></defs><g style="filter:drop-shadow(.6px 1.2px 1px rgba(0,0,0,.85))">${s}</g></svg>` }
+function 작은눈금(r) { let s = "", 글 = ""; const 바깥 = r * .93;
+  for (let v = 0; v <= 100; v += 5) { const a = 라디안(각도(v)), x = Math.sin(a), y = -Math.cos(a), 큰 = v % 25 === 0, 빨 = v >= 80, 길 = 큰 ? 4.4 : 2.2;
+    s += `<line x1="${x * 바깥}" y1="${y * 바깥}" x2="${x * (바깥 - 길)}" y2="${y * (바깥 - 길)}" stroke="${빨 ? "#d8452f" : "#eef2f7"}" stroke-width="${큰 ? 1 : .4}" opacity="${큰 ? 1 : .72}"/>` }
+  for (const v of [0, 50, 100]) { const a = 라디안(각도(v)), n = 바깥 - 10.6;
+    글 += `<text class="num" x="${Math.sin(a) * n}" y="${-Math.cos(a) * n}" dy=".36em" text-anchor="middle" style="font-size:7.6px${v >= 80 ? ";fill:#dc5240" : ""}">${v}</text>` }
+  return `<svg viewBox="${-r} ${-r} ${2 * r} ${2 * r}">${s}${글}</svg>` }
+const 큰 = document.createElement("div"); 큰.className = "w"; 큰.style.cssText = "left:40px;top:30px;width:340px;height:340px";
+큰.innerHTML = `<img src="../window/watch.png"><img class="판속" src="../window/watch.png"><div class="테보정"></div><div class="링"></div><div class="겉선"></div><div class="턱"></div><div class="띠"></div>${막대(170)}${링(170)}`; 판.append(큰);
+const 창칸 = document.createElement("div"); 창칸.className = "창"; 큰.after(창칸);
+/* 작은 다이얼은 10과 30 사이, 70과 90 사이의 정확히 가운데 방향에 둔다 */
+function 작은(cx, 이름, 쪽) { const r = 44, cy = 191, d = document.createElement("div"); d.className = `s ${쪽}`; d.style.cssText = `left:${cx - r}px;top:${cy - r}px;width:${2 * r}px;height:${2 * r}px`;
+  d.innerHTML = `<div class="홈"></div>${작은눈금(r)}<div class="lab">${이름}</div>`; 판.append(d) }
+작은(155, "WEEK", "a"); 작은(265, "CHAT", "b");
+</script>

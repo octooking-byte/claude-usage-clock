@@ -1,0 +1,58 @@
+name: Bug report · 버그 신고
+description: The clock shows something wrong, freezes, or does not start. · 시계가 틀리게 보이거나 멈추거나 뜨지 않을 때
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. Please do not paste API keys, file paths with your real name, or the text of your conversations.
+        신고 고맙습니다. API 키, 실명이 든 경로, 대화 내용은 붙이지 마세요.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened? · 무슨 일이 있었나요?
+      description: What you saw, and what you expected instead. A screenshot of the clock helps a lot. · 본 것과 기대한 것. 시계 캡처가 있으면 가장 좋습니다.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce · 다시 일으키는 순서
+      placeholder: |
+        1. Start a Claude Code session
+        2. Run a background task
+        3. The CHAT light stays on after it ends
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where do you run Claude Code? · 어디서 쓰나요?
+      options:
+        - Desktop app (Code tab) · 데스크톱 앱
+        - Terminal (claude CLI) · 터미널
+        - IDE extension (VS Code, JetBrains) · IDE 확장
+        - More than one at once · 여러 곳을 함께
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: Windows version and Claude Code version · 윈도우 판과 Claude Code 판
+      placeholder: Windows 11 23H2, Claude Code 2.1.309
+    validations:
+      required: true
+  - type: dropdown
+    id: launch
+    attributes:
+      label: How does the clock run? · 시계를 어떻게 띄우나요?
+      options:
+        - Bundled exe (no Python) · 실행 파일
+        - My own Python 3 · 내 파이썬
+        - Not sure · 모르겠음
+  - type: textarea
+    id: state
+    attributes:
+      label: State file (optional) · 상태 파일(선택)
+      description: |
+        Contents of `%USERPROFILE%\.claude\progress\token-panel.json`. Before pasting, delete the text inside `backgroundTasks` and the `session` value if you prefer; they can hold task descriptions.
+        `%USERPROFILE%\.claude\progress\token-panel.json` 내용. 붙이기 전에 `backgroundTasks` 안의 글과 `session` 값은 지워도 됩니다. 작업 설명이 들어 있을 수 있습니다.
+      render: json

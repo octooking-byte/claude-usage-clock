@@ -1,0 +1,31 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>계기판 부품</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Semi+Condensed:wght@500&display=swap">
+<style>
+/* 액정 틀과 용두를 크롬으로 그려 PNG로 뽑는다. 숫자는 창이 그때그때 얹는다 */
+html, body { margin: 0; background: transparent }
+#액정틀, #꼭지틀 { position: relative; display: none }
+body.panel #액정틀 { display: block; width: 178px; height: 208px }
+body.crown #꼭지틀 { display: block; width: 30px; height: 22px }
+#액정 { position: absolute; left: 4px; top: 4px; width: 170px; height: 200px; padding: 124px 14px 0; box-sizing: border-box; border-radius: 14px 14px 50% 50% / 14px 14px 32px 32px; background: linear-gradient(180deg, #0a0d13, #05070b 60%); box-shadow: 0 0 0 1px #0b0c0f, 0 0 0 2.2px #8d9299, 0 0 0 3.2px #2a2c31, inset 0 1px 6px rgba(120, 170, 255, .14); display: grid; align-content: start }
+.줄 { height: 18px; display: flex; align-items: center; font: 500 11px "Saira Semi Condensed", sans-serif; letter-spacing: .1em; color: #9fb0c6 }
+#용두 { position: absolute; left: 11px; top: 3px; width: 13px; height: 16px; border-radius: 2px 3px 3px 2px; background: repeating-linear-gradient(180deg, rgba(255, 255, 255, .55) 0 .9px, rgba(0, 0, 0, .55) .9px 2.2px), linear-gradient(180deg, #2c2e33, #d8dbe0 34%, #f3f4f6 46%, #8a8d93 70%, #1e2024) }
+#용두::before { content: ""; position: absolute; left: -7px; top: 5px; width: 8px; height: 6px; background: linear-gradient(180deg, #3c3e43, #c3c6cb 45%, #2a2c30) }
+/* 크로노그래프용: 액정 아랫변이 더 큰 원을 따르고, 용두는 크고 둥글며 홈이 돌아가는 다섯 장을 뽑는다 */
+body.panelc #액정틀 { display: block; width: 178px; height: 208px }
+body.panelc #액정 { padding-top: 125px; border-radius: 14px 14px 50% 50% / 14px 14px 23px 23px }
+/* 용두 위아래 기둥. 크기 기둥의 홈은 창이 돌아가는 각도에 맞춰 그때그때 얹는다 */
+#기둥틀 { display: none; position: relative; width: 27px; height: 38px }
+body.pusher #기둥틀 { display: block }
+#기둥 { position: absolute; left: 6px; top: 6px; width: 15px; height: 17px; border-radius: 3.5px 3.5px 1.5px 1.5px; background: linear-gradient(90deg, #24262b, #cfd3d8 30%, #f5f6f8 44%, #8a8d93 72%, #1a1c20); box-shadow: 0 1.5px 3px rgba(0, 0, 0, .75), inset 0 1.2px .8px rgba(255, 255, 255, .55), inset 0 -1.4px 1.5px rgba(0, 0, 0, .5) }
+#기둥::after { content: ""; position: absolute; left: 3.5px; top: 17px; width: 8px; height: 9px; background: linear-gradient(90deg, #33353a, #d4d7dc 42%, #85888e 66%, #232529) }
+#크꼭지틀 { display: none; position: relative; width: 27px; height: 40px }
+body.crownc #크꼭지틀 { display: block }
+#크꼭지 { position: absolute; left: 6px; top: 6px; width: 15px; height: 28px; border-radius: 3px 6px 6px 3px / 4px 9px 9px 4px; background: repeating-linear-gradient(180deg, rgba(255, 255, 255, .5) 0 1px, rgba(0, 0, 0, .6) 1px 2.5px), linear-gradient(180deg, #24262b, #cfd3d8 30%, #f5f6f8 44%, #8a8d93 72%, #1a1c20); box-shadow: 0 1.5px 3px rgba(0, 0, 0, .75), inset -1.4px 0 1.5px rgba(0, 0, 0, .55) }
+</style>
+<div id="액정틀"><div id="액정"><div class="줄">WEEK</div><div class="줄">CHAT</div><div class="줄">TURN</div></div></div>
+<div id="꼭지틀"><div id="용두"></div></div>
+<div id="크꼭지틀"><div id="크꼭지"></div></div>
+<div id="기둥틀"><div id="기둥"></div></div>
+<script>const [이름, 돎] = location.hash.slice(1).split("-"); document.body.classList.add(이름); if (돎) document.getElementById("크꼭지").style.backgroundPositionY = `${돎 * .5}px, 0`;</script>

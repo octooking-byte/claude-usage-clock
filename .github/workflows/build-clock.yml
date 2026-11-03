@@ -1,0 +1,49 @@
+# Builds the Python-free clock (token-clock.exe) when a version tag is pushed,
+# and attaches it to a DRAFT release. A person scans it and publishes the release by hand.
+name: Build clock for Windows
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install build tools
+        run: python -m pip install numpy pillow pyinstaller
+
+      - name: Build token-clock.exe
+        run: >
+          pyinstaller window/launch.py --name token-clock --onedir --noconsole --noconfirm
+          --paths window --hidden-import window
+          --add-data "window/*.png;window" --add-data "center/*.png;center"
+
+      - name: Zip and checksum
+        shell: pwsh
+        run: |
+          Compress-Archive -Path dist/token-clock/* -DestinationPath token-clock-windows.zip
+          (Get-FileHash token-clock-windows.zip -Algorithm SHA256).Hash | Out-File -Encoding ascii token-clock-windows.zip.sha256
+
+      - name: Draft release
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create ${{ github.ref_name }} token-clock-windows.zip token-clock-windows.zip.sha256 --draft --title ${{ github.ref_name }} --notes "Unzip token-clock-windows.zip into %LOCALAPPDATA%\TokenClock\ so that token-clock.exe sits directly in that folder."
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+        with:
+          name: token-clock-windows
+          path: token-clock-windows.zip*
