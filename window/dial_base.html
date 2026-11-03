@@ -1,0 +1,84 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>토큰 계기판 원판</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Semi+Condensed:wght@500&display=swap">
+<style>
+/* 실사 시계 세 개를 겹친다. 파란 빛은 눈금 바깥 띠에만 두고, 가운데는 검은 동심원 판으로 비운다 */
+:root { --ink: #f3f6fa; --red: #e8301f; --lit: 24, 112, 255; --face: "Saira Semi Condensed" }
+html, body { margin: 0; background: transparent }
+#판 { position: relative; width: 554px; height: 296px; overflow: hidden }
+.w { position: absolute; border-radius: 50%; filter: drop-shadow(0 7px 9px rgba(0, 0, 0, .62)) }
+.w img { position: absolute; inset: 0; width: 100%; height: 100%; display: block }
+.w svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible }
+.띠 { position: absolute; inset: 7.7%; border-radius: 50%; mix-blend-mode: screen; background: conic-gradient(from var(--from), transparent 0, rgba(var(--lit), .16) 8%, rgba(var(--lit), .9) 19%, rgba(205, 236, 255, 1) 23%, rgba(var(--lit), .9) 27%, rgba(var(--lit), .16) 40%, transparent 50%);
+  -webkit-mask: radial-gradient(closest-side, transparent 86%, rgba(0, 0, 0, .55) 90%, #000 96%, rgba(0, 0, 0, .4) 98.5%, transparent 100%); filter: blur(.5px) }
+.사발 { position: absolute; inset: 31%; border-radius: 50%; background: repeating-radial-gradient(circle, rgba(255, 255, 255, .05) 0 .4px, transparent .4px 1.5px), radial-gradient(closest-side, #0b0c0f 0, #101114 72%, #191b1f 94%, #26282d 100%) }
+.테 { position: absolute; inset: 30.4%; border-radius: 50%; box-shadow: 0 0 0 1px rgba(255, 255, 255, .5), 0 0 0 2.1px rgba(30, 32, 36, .95), 0 1px 4px 2px rgba(0, 0, 0, .75), inset 0 2px 5px rgba(0, 0, 0, .62) }
+.num { font-family: var(--face), sans-serif; font-weight: 500; fill: var(--ink) }
+.lab { position: absolute; transform: translate(-50%, -50%); font-family: var(--face), sans-serif; font-weight: 500; color: var(--ink); letter-spacing: .08em; white-space: nowrap; opacity: .9 }
+body.hand #판 > .w { display: none } body:not(.hand) #바늘 { display: none }
+/* 시계 하나만 뽑는 모드: 좌우 시계가 따로 돌 수 있게 층을 나눈다 */
+body.s0 .w:not(.w0), body.s1 .w:not(.w1), body.s2 .w:not(.w2) { display: none }
+/* 누를 때 얹는 발광 층: 푸른 뒷조명이 판과 가운데를 밝히고 눈금 속은 하얗게 탄다 */
+body.glow .w { filter: none } body.glow .w img { display: none }
+body.glow .띠 { mix-blend-mode: normal; filter: blur(1.2px); background: conic-gradient(from var(--from), rgba(30, 110, 255, .6) 0, rgba(60, 150, 255, .95) 16%, rgba(220, 242, 255, 1) 24%, rgba(60, 150, 255, .95) 32%, rgba(30, 110, 255, .6) 54%, rgba(18, 74, 214, .5) 100%);
+  -webkit-mask: radial-gradient(closest-side, transparent 80%, rgba(0, 0, 0, .6) 86%, #000 94%, rgba(0, 0, 0, .55) 98.5%, transparent 100%) }
+body.glow .사발 { background: radial-gradient(closest-side, #071a4a 0, #0d3596 30%, #1c6cff 60%, #7cc6ff 84%, #e9f7ff 95%, #2a7dff 100%); box-shadow: 0 0 16px 4px rgba(40, 130, 255, .85) }
+body.glow .w svg { filter: drop-shadow(0 0 1.4px #cfe9ff) drop-shadow(0 0 4px #2f8cff) drop-shadow(0 0 10px #1560ff) }
+body.glow line { stroke: #f6fcff !important; opacity: 1 !important } body.glow text { fill: #eef8ff !important }
+body.glow .lab { color: #fff; text-shadow: 0 0 5px #6fb8ff }
+#바늘 { position: absolute; left: 0; top: 0; width: 270px; height: 270px }
+/* 흰 시계(lt): 사진의 금속 결을 살려 판을 희게 올리고 글자, 눈금, 가운데 원을 함께 뒤집는다. 금속 테는 그대로다 */
+body.lt { --ink: #15171b }
+.w img.판속 { display: none }
+body.lt .w img.판속 { display: block }
+.w img.판속 { clip-path: circle(42.3% at 50% 50%); filter: grayscale(1) brightness(5.2) contrast(.16) brightness(1.62) }
+body.lt line[stroke="#f3f7fc"] { stroke: #1d2025 }
+body.lt .w svg g { filter: none !important }
+body.lt .띠 { mix-blend-mode: multiply }
+body.lt .사발 { background: repeating-radial-gradient(circle, rgba(0, 0, 0, .05) 0 .4px, transparent .4px 1.5px), radial-gradient(closest-side, #e6e7ea 0, #f1f2f4 72%, #dfe1e4 94%, #d0d3d7 100%) }
+body.lt .테 { box-shadow: 0 0 0 1px rgba(50, 54, 60, .7), 0 0 0 2.1px rgba(150, 154, 160, .9), 0 1px 3px 1px rgba(0, 0, 0, .35), inset 0 2px 4px rgba(0, 0, 0, .28) }
+</style>
+<div id="판"></div>
+<svg id="바늘" viewBox="-135 -135 270 270">
+  <defs>
+    <linearGradient id="밝은" x1="0" y1="-64" x2="0" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ffffff"/><stop offset=".6" stop-color="#e4e6e9"/><stop offset="1" stop-color="#c3c6cb"/></linearGradient>
+    <linearGradient id="어둔" x1="0" y1="-64" x2="0" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#a9adb3"/><stop offset="1" stop-color="#6d7075"/></linearGradient>
+    <linearGradient id="테" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f2f3f4"/><stop offset=".5" stop-color="#6b6e73"/><stop offset="1" stop-color="#c9ccd0"/></linearGradient>
+    <radialGradient id="캡" cx=".36" cy=".3"><stop offset="0" stop-color="#f7f7f6"/><stop offset=".5" stop-color="#b3b6bb"/><stop offset="1" stop-color="#3f4145"/></radialGradient>
+  </defs>
+  <!-- 꼬리: 가는 대 끝에 빈 고리를 달아 무게 중심을 잡는다 -->
+  <path d="M-1.3 0 L-.9 18.4 L.9 18.4 L1.3 0 Z" fill="#b5b8bd"/>
+  <circle cy="22.8" r="4.2" fill="none" stroke="url(#테)" stroke-width="1.7"/>
+  <!-- 몸통: 가운데 능선을 두고 한쪽은 밝게, 한쪽은 어둡게 깎은 면 -->
+  <path d="M0 -64 L-1.65 -64 L-3 0 L0 0 Z" fill="url(#밝은)"/>
+  <path d="M0 -64 L1.65 -64 L3 0 L0 0 Z" fill="url(#어둔)"/>
+  <!-- 끝: 붉은 칠 -->
+  <path d="M0 -100 L-1.65 -64 L0 -64 Z" fill="#ff4a38"/>
+  <path d="M0 -100 L1.65 -64 L0 -64 Z" fill="#b01a10"/>
+  <!-- 축: 검은 깃과 금속 고리, 광택 캡 -->
+  <circle r="8.2" fill="#0a0b0d" stroke="url(#테)" stroke-width=".9"/>
+  <circle r="4.9" fill="url(#캡)" stroke="#111214" stroke-width=".4"/>
+  <circle r="1.1" fill="#17181b"/>
+</svg>
+<script>
+if (location.hash) document.body.classList.add(...location.hash.slice(1).split("-"));
+const 판 = document.getElementById("판"), 다이얼비 = 0.847;
+const 라디안 = 도 => 도 * Math.PI / 180;
+/* 값 0~100을 시작각~끝각에 놓는다. 큰 눈금 옆에만 숫자를 쓴다 */
+function 눈금(r, 시작, 끝, 큰칸, 작은칸, 숫자칸, 숫자크기) {
+  const 각 = v => 라디안(시작 + (끝 - 시작) * v / 100), 안 = r * 다이얼비 * .94; let s = "", 글 = "";
+  for (let v = 0; v <= 100; v += 작은칸) {
+    const a = 각(v), 큰 = v % 큰칸 === 0, 빨 = v >= 80, x = Math.sin(a), y = -Math.cos(a), 길 = 큰 ? r * .1 : r * .035;
+    s += `<line x1="${x * 안}" y1="${y * 안}" x2="${x * (안 - 길)}" y2="${y * (안 - 길)}" stroke="${빨 ? "var(--red)" : "#f3f7fc"}" stroke-width="${큰 ? r * .024 : r * .0075}" opacity="${큰 ? 1 : .78}"/>` }
+  for (let v = 0; v <= 100; v += 숫자칸) {
+    const a = 각(v), n = 안 - r * .205;
+    글 += `<text class="num" x="${Math.sin(a) * n}" y="${-Math.cos(a) * n}" dy=".36em" text-anchor="middle" style="font-size:${숫자크기}px${v >= 80 ? ";fill:var(--red)" : ""}">${v}</text>` }
+  return `<svg viewBox="${-r} ${-r} ${2 * r} ${2 * r}"><g style="filter:drop-shadow(0 0 1.4px rgba(150,205,255,.85))">${s}</g><g style="filter:drop-shadow(0 .6px .8px rgba(0,0,0,.85))">${글}</g></svg>` }
+function 시계(cx, cy, r, 시작, 끝, 큰칸, 작은칸, 숫자칸, 숫자크기, 글, 글크기, 글y, 빛각) {
+  const d = document.createElement("div"); d.className = `w w${판.children.length}`; d.style.cssText = `left:${cx - r}px;top:${cy - r}px;width:${2 * r}px;height:${2 * r}px;--from:${빛각}deg`;
+  d.innerHTML = `<img src="watch.png"><img class="판속" src="watch.png"><div class="띠"></div><div class="사발"></div><div class="테"></div>${눈금(r, 시작, 끝, 큰칸, 작은칸, 숫자칸, 숫자크기)}<div class="lab" style="left:50%;top:${50 + 글y * 50}%;font-size:${글크기}px">${글}</div>`; 판.append(d) }
+시계(104, 154, 86, -150, 30, 25, 5, 50, 13.8, "WEEK", 11.6, .23, 200);
+시계(450, 154, 86, -30, 150, 25, 5, 50, 13.8, "CHAT", 11.6, .23, 350);
+시계(277, 139, 130, -135, 135, 10, 2, 20, 19.2, "", 15.4, .22, 345);
+</script>

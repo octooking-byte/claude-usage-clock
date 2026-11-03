@@ -1,0 +1,15 @@
+name: Idea · 기능 제안
+description: Something the clock could show or do. · 시계가 보이거나 해 주면 좋을 것
+labels: [enhancement]
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: What do you want to know at a glance? · 한눈에 알고 싶은 것
+      description: Describe the moment you wished the clock told you something. · 시계가 알려 줬으면 했던 순간을 적어 주세요.
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: How could the clock show it? · 시계가 어떻게 보이면 좋을까요?

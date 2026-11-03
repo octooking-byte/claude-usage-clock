@@ -1,0 +1,23 @@
+# 실행 중 생기는 것
+__pycache__/
+*.pyc
+*.tmp
+*.bak
+
+# 엔진이 만드는 형식 파일
+.claude-plugin/types/
+
+# 옛 판 사본과 참고 자료. 저장소에 넣지 않는다
+보관_사본/
+보관_시계판/
+lucci/
+center/보관_*/
+window/보관_*/
+
+# 시계가 쓰지 않는 옛 시안과 원본 사진 · 사진 오리기 도구. 이 컴퓨터에만 둔다
+window/base_a.png
+window/base_b.png
+window/base_c.png
+window/base_기능전.png
+window/watch.png
+window/photo_dial.py
