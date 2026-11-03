@@ -1,6 +1,6 @@
 {
   "name": "token-usage-clock",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A desktop mechanical clock for Claude Code: 5-hour limit, weekly limit and conversation size at a glance, with lights for working, waiting and background tasks. Windows.",
   "author": {
     "name": "octooking-byte"

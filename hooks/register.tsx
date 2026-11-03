@@ -91,8 +91,8 @@ const LAUNCHERS = ['Agent', 'Workflow', 'Monitor']
 const NO_CLOCK = 'Token clock could not start. Check your internet connection, then type /clock to try again. · 시계를 띄우지 못했습니다. 인터넷 연결을 확인하고 /clock을 입력하세요.'
 const PREPARING = 'Setting up the token clock for the first time (about a minute). · 시계를 처음 한 번 준비합니다(1분쯤).'
 // 파이썬이 없는 컴퓨터는 이 저장소 Releases의 실행 파일판을 받는다. 받은 파일은 아래 지문과 같을 때만 푼다
-const EXE_URL = 'https://github.com/octooking-byte/claude-usage-clock/releases/download/v0.1.0/token-clock-windows.zip'
-const EXE_SHA256 = 'CECA3A6C2FB2523D2F5580FFC8287AABBFF9339AEF8352E36B529E87FB9CE593'
+const EXE_URL = 'https://github.com/octooking-byte/claude-usage-clock/releases/download/v0.1.2/token-clock-windows.zip'
+const EXE_SHA256 = 'B296FCBB0F91F41CE8BE4BA043373FA0C80C4A40519B97F72653718B563D7C50'
 
 // 사람이 아닌 입력. 이 입력은 시계 주인을 바꾸지 않는다.
 const NOT_PERSON = ['task-notification', 'scheduled-trigger', 'peer', 'peer-send-message', 'projects-relay', 'channel', 'plugin', 'coordinator', 'observer', 'observer-activity', 'unclassified', 'sdk', 'auto-continuation']
