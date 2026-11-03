@@ -1,12 +1,12 @@
 {
-  "name": "token-panel",
-  "description": "Token Panel: a desktop clock that shows your Claude Code limits.",
+  "name": "token-usage-clock",
+  "description": "Claude Usage Clock: a desktop clock that shows your Claude Code limits.",
   "owner": {
     "name": "octooking-byte"
   },
   "plugins": [
     {
-      "name": "token-panel",
+      "name": "token-usage-clock",
       "source": "./",
       "description": "A desktop mechanical clock for Claude Code: 5-hour limit, weekly limit and conversation size at a glance, with lights for working, waiting and background tasks. Windows.",
       "category": "productivity",

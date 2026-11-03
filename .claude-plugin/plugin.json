@@ -1,12 +1,12 @@
 {
-  "name": "token-panel",
+  "name": "token-usage-clock",
   "version": "0.1.0",
   "description": "A desktop mechanical clock for Claude Code: 5-hour limit, weekly limit and conversation size at a glance, with lights for working, waiting and background tasks. Windows.",
   "author": {
     "name": "octooking-byte"
   },
-  "homepage": "https://github.com/octooking-byte/token-panel",
-  "repository": "https://github.com/octooking-byte/token-panel",
+  "homepage": "https://github.com/octooking-byte/claude-usage-clock",
+  "repository": "https://github.com/octooking-byte/claude-usage-clock",
   "license": "MIT",
   "keywords": [
     "claude-code",

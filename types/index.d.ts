@@ -4,7 +4,7 @@ export type Turn = { total: number; fresh: number; requests: number; subRequests
 
 declare module 'claude-code' {
   interface PluginState {
-    'token-panel': {
+    'token-usage-clock': {
       meter: Shaped<Meter>
       current: Shaped<Turn>
       last: Shaped<Turn>

@@ -32,9 +32,9 @@ const EN: typeof KO = {
 }
 const say = () => (korean ? KO : EN)
 
-const meter = atom({ plugin: 'token-panel', key: 'meter' } as const, { limits: [], contextWindow: 0 } as Meter, { shape: 'meter-1' })
-const current = atom({ plugin: 'token-panel', key: 'current' } as const, EMPTY, { shape: 'turn-1' })
-const last = atom({ plugin: 'token-panel', key: 'last' } as const, EMPTY, { shape: 'turn-1' })
+const meter = atom({ plugin: 'token-usage-clock', key: 'meter' } as const, { limits: [], contextWindow: 0 } as Meter, { shape: 'meter-1' })
+const current = atom({ plugin: 'token-usage-clock', key: 'current' } as const, EMPTY, { shape: 'turn-1' })
+const last = atom({ plugin: 'token-usage-clock', key: 'last' } as const, EMPTY, { shape: 'turn-1' })
 
 const tokens = (n: number) =>
   korean

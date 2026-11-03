@@ -1,5 +1,5 @@
 blank_issues_enabled: false
 contact_links:
   - name: Mac / Linux support · 맥 · 리눅스 지원
-    url: https://github.com/octooking-byte/token-panel/issues?q=label%3Aplatform
+    url: https://github.com/octooking-byte/claude-usage-clock/issues?q=label%3Aplatform
     about: Follow or upvote the platform issues instead of opening a new one. · 새로 열지 말고 기존 이슈에 👍를 눌러 주세요.

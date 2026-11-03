@@ -1,4 +1,4 @@
-# 토큰 계기판
+# 토큰 계기판 (Claude Usage Clock)
 
 Claude Code의 5시간 한도, 주간 한도, 대화 크기를 바탕화면 위 기계식 시계로 보여 줍니다. `/usage`를 치지 않아도 바늘 위치로 남은 양이 보입니다.
 
@@ -25,16 +25,16 @@ Claude Code의 5시간 한도, 주간 한도, 대화 크기를 바탕화면 위 
 **1. 모드를 넣습니다.** Claude Code 터미널 세션에서:
 
 ```
-/plugin install token-panel --marketplace octooking-byte/token-panel
+/plugin install token-usage-clock --marketplace octooking-byte/claude-usage-clock
 ```
 
 마켓플레이스를 더할지 물으면 `y`, 그다음 범위를 고릅니다. 이 한 줄 설치는 Claude Code v2.1.275 이상에서 됩니다. 그보다 옛 판이면 셸에서 아래 두 줄을 대신 칩니다.
 
 ```
-claude plugin marketplace add octooking-byte/token-panel
-claude plugin install token-panel@token-panel
+claude plugin marketplace add octooking-byte/claude-usage-clock
+claude plugin install token-usage-clock@token-usage-clock
 ```
- `/plugin`이 안 되는 데스크톱 앱에서는 입력창 옆 **+** → **Plugins** → **Add marketplace**에 `octooking-byte/token-panel` → **Add plugin**.
+ `/plugin`이 안 되는 데스크톱 앱에서는 입력창 옆 **+** → **Plugins** → **Add marketplace**에 `octooking-byte/claude-usage-clock` → **Add plugin**.
 
 **2. 시계가 돌 바탕을 고릅니다.** 둘 중 하나.
 
@@ -167,7 +167,9 @@ Claude Code 창(세션)을 여러 개 열어도 시계는 하나입니다. 시�
 
 모드(`hooks/register.tsx`)가 Claude Code 안에서 사용량과 상태를 `~/.claude/progress/token-panel.json`에 적습니다. 시계(`window/`)는 따로 도는 파이썬 창으로, 그 파일만 읽고 NumPy와 Pillow로 그림을 그립니다. 가만히 있을 때 CPU 코어 하나의 1% 미만, 메모리 약 115MB를 씁니다.
 
-모드에는 `token-panel` 스킬도 들어 있어, 빛이 무슨 뜻인지나 시계가 왜 안 뜨는지 Claude에게 물어볼 수 있습니다.
+모드가 실행하는 것은 이것뿐입니다: 시계(`py -3 window/launch.py`, 파이썬이 없으면 `token-clock.exe`), 한국어 · 영어를 고르려고 세션마다 한 번 `reg query HKCU\Control Panel\International /v LocaleName`, 용두를 당겼을 때 메인 세션의 `/compact`. 파일은 `~/.claude/progress/` 안에서만 읽고 씁니다. 인터넷으로는 아무것도 보내지 않습니다.
+
+모드에는 `token-usage-clock` 스킬도 들어 있어, 빛이 무슨 뜻인지나 시계가 왜 안 뜨는지 Claude에게 물어볼 수 있습니다.
 
 ## 언어
 

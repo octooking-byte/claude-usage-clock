@@ -1,7 +1,7 @@
 import { expect, test } from 'claude-code/testing'
 
 const PANE = {
-  plugin: 'token-panel',
+  plugin: 'token-usage-clock',
   component: 'Pane',
   requestId: 'token-panel',
   props: {

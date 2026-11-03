@@ -1,10 +1,10 @@
-# Token Panel
+# Claude Usage Clock
 
 A desktop mechanical clock for Claude Code. It shows how much of your 5-hour limit, weekly limit and conversation you have used, so you can read it at a glance instead of running `/usage`.
 
 [한국어](README.ko.md)
 
-<img src="docs/demo-lights.gif" width="420" alt="Token Panel: the big dial glows while Claude works, blinks while it waits for you, then the CHAT dial glows for a background task">
+<img src="docs/demo-lights.gif" width="420" alt="Claude Usage Clock: the big dial glows while Claude works, blinks while it waits for you, then the CHAT dial glows for a background task">
 
 - **No tokens.** The clock never calls a model. It reads a small file the mod writes.
 - **No network.** Nothing leaves your computer.
@@ -25,17 +25,17 @@ A desktop mechanical clock for Claude Code. It shows how much of your 5-hour lim
 **1. Add the mod.** In a terminal session of Claude Code:
 
 ```
-/plugin install token-panel --marketplace octooking-byte/token-panel
+/plugin install token-usage-clock --marketplace octooking-byte/claude-usage-clock
 ```
 
 Answer `y` to add the marketplace, then pick a scope. This one-line form needs Claude Code v2.1.275 or later. On an older version, run these two lines in your shell instead:
 
 ```
-claude plugin marketplace add octooking-byte/token-panel
-claude plugin install token-panel@token-panel
+claude plugin marketplace add octooking-byte/claude-usage-clock
+claude plugin install token-usage-clock@token-usage-clock
 ```
 
-In the desktop app, where `/plugin` does not run: click **+** next to the prompt box → **Plugins** → **Add marketplace** `octooking-byte/token-panel` → **Add plugin**.
+In the desktop app, where `/plugin` does not run: click **+** next to the prompt box → **Plugins** → **Add marketplace** `octooking-byte/claude-usage-clock` → **Add plugin**.
 
 **2. Give the clock something to run on.** Pick one.
 
@@ -168,7 +168,9 @@ Position, size, layout, colour and face are remembered.
 
 The mod (`hooks/register.tsx`) runs inside Claude Code and writes usage and status to `~/.claude/progress/token-panel.json`. The clock (`window/`) is a separate Python window that reads that file and draws each frame with NumPy and Pillow. It uses well under 1% of one CPU core while idle and about 115 MB of memory.
 
-The plugin also adds a `token-panel` skill, so you can ask Claude what a light means or why the clock does not appear.
+Everything the mod runs: the clock (`py -3 window/launch.py`, or `token-clock.exe` when Python is missing), `reg query HKCU\Control Panel\International /v LocaleName` once per session to pick Korean or English, and `/compact` on the main session when you pull the crown. It reads and writes files only in `~/.claude/progress/`. It sends nothing over the network.
+
+The plugin also adds a `token-usage-clock` skill, so you can ask Claude what a light means or why the clock does not appear.
 
 ## Language
 

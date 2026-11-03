@@ -1,9 +1,9 @@
 ---
-name: token-panel
-description: Explain or troubleshoot the Token Panel desktop clock, which shows Claude Code's 5-hour limit, weekly limit and conversation size on a mechanical clock. Use when the person asks what the clock's dials, lights or controls mean, why it does not appear, why a light stays on, or how to hide, resize, recolour or reset it.
+name: token-usage-clock
+description: Explain or troubleshoot the Claude Usage Clock desktop clock, which shows Claude Code's 5-hour limit, weekly limit and conversation size on a mechanical clock. Use when the person asks what the clock's dials, lights or controls mean, why it does not appear, why a light stays on, or how to hide, resize, recolour or reset it.
 ---
 
-# Token Panel clock
+# Claude Usage Clock
 
 The mod (`hooks/register.tsx`) writes usage and status to `~/.claude/progress/token-panel.json`. A separate Python window (`window/`) reads that file and draws the clock. It calls no model and uses no network.
 
