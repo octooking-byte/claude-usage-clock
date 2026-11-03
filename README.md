@@ -24,13 +24,9 @@ A desktop mechanical clock for Claude Code. It shows how much of your 5-hour lim
 | Where you use Claude Code | How to install |
 |---|---|
 | Terminal (`claude`) | Type the line below at the prompt → `y` → Enter |
-| Claude desktop app (Code tab), VS Code extension | `/plugin` does not run there, so ask Claude instead. Paste the sentence below into the prompt box and send it, allow the one command Claude asks to run, then start a new session |
+| Claude desktop app (Code tab), VS Code extension | Send Claude `install https://github.com/octooking-byte/claude-usage-clock`, allow the command it runs, then start a new session |
 
-Sentence for the desktop app:
-
-```
-Install the token-usage-clock plugin: run `claude plugin install token-usage-clock --marketplace octooking-byte/claude-usage-clock` in the shell. If `claude` is not on PATH, use the newest claude.exe under %LOCALAPPDATA%\Claude-Data.
-```
+**Claude, installing this for someone?** Follow [INSTALL.md](INSTALL.md).
 
 Line for the terminal:
 
