@@ -25,7 +25,7 @@ jobs:
 
       - name: Build token-clock.exe
         run: >
-          pyinstaller window/launch.py --name token-clock --onedir --noconsole --noconfirm
+          pyinstaller window/launch.py --name token-clock --onedir --noconsole --noconfirm --noupx
           --paths window --hidden-import window
           --add-data "window/*.png;window" --add-data "center/*.png;center"
 
