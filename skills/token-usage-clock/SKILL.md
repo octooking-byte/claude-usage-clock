@@ -5,7 +5,7 @@ description: Explain or troubleshoot the Claude Usage Clock desktop clock, which
 
 # Claude Usage Clock
 
-The mod (`hooks/register.tsx`) writes usage and status to `~/.claude/progress/token-panel.json`. A separate Python window (`window/`) reads that file and draws the clock. It calls no model and uses no network.
+The mod (`hooks/register.tsx`) writes usage and status to `~/.claude/progress/token-panel.json`. A separate Python window (`window/`) reads that file and draws the clock. It calls no model. The only network use is a one-time setup when the clock cannot start (pip, or the release zip checked by SHA-256).
 
 ## Reading it
 

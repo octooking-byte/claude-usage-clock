@@ -88,7 +88,11 @@ const WAITING_TOOLS = ['AskUserQuestion', 'ExitPlanMode']
 // 띄우는 순간 뒤에서 도는 도구. 엔진은 턴이 끝날 때만 작업 목록을 넘기므로, 띄우자마자 CHAT 빛을 먼저 켠다
 const LAUNCHERS = ['Agent', 'Workflow', 'Monitor']
 // 엔진 안에서는 컴퓨터 언어를 믿고 알 길이 없어, 사람에게 보이는 글은 영어 · 한국어를 함께 쓴다
-const NO_CLOCK = 'Token clock could not start. Install Python 3, run py -3 -m pip install numpy pillow, then type /clock. · 시계를 띄우지 못했습니다. 위 명령으로 설치한 뒤 /clock을 입력하세요.'
+const NO_CLOCK = 'Token clock could not start. Check your internet connection, then type /clock to try again. · 시계를 띄우지 못했습니다. 인터넷 연결을 확인하고 /clock을 입력하세요.'
+const PREPARING = 'Setting up the token clock for the first time (about a minute). · 시계를 처음 한 번 준비합니다(1분쯤).'
+// 파이썬이 없는 컴퓨터는 이 저장소 Releases의 실행 파일판을 받는다. 받은 파일은 아래 지문과 같을 때만 푼다
+const EXE_URL = 'https://github.com/octooking-byte/claude-usage-clock/releases/download/v0.1.0/token-clock-windows.zip'
+const EXE_SHA256 = 'CECA3A6C2FB2523D2F5580FFC8287AABBFF9339AEF8352E36B529E87FB9CE593'
 
 // 사람이 아닌 입력. 이 입력은 시계 주인을 바꾸지 않는다.
 const NOT_PERSON = ['task-notification', 'scheduled-trigger', 'peer', 'peer-send-message', 'projects-relay', 'channel', 'plugin', 'coordinator', 'observer', 'observer-activity', 'unclassified', 'sdk', 'auto-continuation']
@@ -254,6 +258,47 @@ export async function summon($: any) {
   return false
 }
 
+// 처음 설치한 컴퓨터에는 시계를 그리는 재료가 없다. 설치 한 줄로 끝나게, 시계가 안 뜨면 한 번 스스로 준비한다.
+// 파이썬이 있으면 numpy · Pillow를 사용자 자리에 깔고, 없거나 실패하면 실행 파일판을 받아 지문을 맞춰 본 뒤 푼다
+let preparing: Promise<boolean> | undefined
+export function prepare($: any) {
+  preparing ??= (async () => {
+    $.ui.toast(PREPARING, { timeoutMs: 8000 })
+    for (const python of [['py', '-3'], ['python3'], ['python']]) {
+      try {
+        const pip = await $.process.run([...python, '-m', 'pip', 'install', '--user', '--disable-pip-version-check', '-q', 'numpy', 'pillow'], { timeoutMs: 300000 })
+        if (pip.exitCode === 0 && (await summon($))) return true
+        if (pip.exitCode === 0) break
+      } catch {
+        // 이 이름의 파이썬이 없다. 다음을 본다.
+      }
+    }
+    const fetch = [
+      "$ProgressPreference = 'SilentlyContinue'; $ErrorActionPreference = 'Stop'",
+      '[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12',
+      "$zip = Join-Path $env:TEMP 'token-clock-windows.zip'",
+      `Invoke-WebRequest -UseBasicParsing -Uri '${EXE_URL}' -OutFile $zip`,
+      `if ((Get-FileHash $zip -Algorithm SHA256).Hash -ne '${EXE_SHA256}') { Remove-Item $zip; exit 3 }`,
+      "Expand-Archive -Force $zip (Join-Path $env:LOCALAPPDATA 'TokenClock'); Remove-Item $zip",
+    ].join('; ')
+    try {
+      const got = await $.process.run(['powershell', '-NoProfile', '-NonInteractive', '-Command', fetch], { timeoutMs: 600000 })
+      if (got.exitCode === 0 && (await summon($))) return true
+    } catch {
+      // 받지 못했다. 아래에서 알린다.
+    }
+    preparing = undefined  // 다음 /clock에서 다시 해 볼 수 있게 한다
+    $.ui.toast(NO_CLOCK)
+    return false
+  })()
+  return preparing
+}
+
+// 시계를 띄우고, 안 뜨면 재료부터 준비한다
+async function show($: any) {
+  return (await summon($)) || prepare($)
+}
+
 // 주인은 1초마다 요청을 본다. 이만큼 아무도 받지 않으면 받을 세션이 없는 것이다
 const ASK_LIMIT = 15000
 // 압축이 끝났다는 소식이 이만큼 없으면 그 압축은 잊고 새 요청을 받는다
@@ -325,40 +370,43 @@ export async function watch($: any) {
   }
 }
 
+// 세션 중에 /plugin install로 막 깔리면 session.start가 이미 지나 있다. 그때는 첫 입력에서 같은 일을 한다
+let booted = false
+async function boot($: any) {
+  booted = true
+  await quietly(async () => {
+    korean = await language($)
+  })
+  await quietly(async () => {
+    headless = String((await $.env.get('CLAUDE_CODE_ENTRYPOINT')) ?? '').startsWith('sdk')
+    if (!headless) {
+      $.clock.every(1000, async () => {
+        await watch($)
+        await quietly(() => refresh($))  // 오래 남은 대기(30분)는 쉬는 동안에도 버린다
+        if ((activity !== 'idle' || background > 0) && (await $.clock.now()) - shared > BEAT) await quietly(() => share($))
+      })
+      // 처음 설치한 컴퓨터는 시계 재료가 없어 안 뜬다. 그때 스스로 준비하므로 설치는 한 줄로 끝난다
+      if (await wanted($)) void show($)
+    }
+  })
+  await quietly(() => $.command.register({ name: 'tokens', description: 'Open the token usage pane · 토큰 사용량 패널' }))
+  await quietly(() => $.command.register({ name: 'clock', description: 'Show the desktop token clock (/clock off hides it) · 토큰 계기판 시계' }))
+  // 사용량은 바탕화면 시계로 본다. 앱 안 패널은 세션이 시작될 때 열지 않고, 열려 있던 것도 닫는다. /tokens 로만 연다
+  void quietly(() => $.ui.close({ id: PANE }))
+  await quietly(async () => {
+    const usage = await $.session.usage()
+    await update($, meter, () => ({
+      limits: toLimits(usage.rateLimits),
+      contextTokens: usage.context.tokens,
+      contextWindow: usage.context.window,
+    }))
+    await share($)
+  })
+}
+
 export const register: Register = on => {
   on('session.start', async ($, e, next) => {
-    await quietly(async () => {
-      korean = await language($)
-    })
-    await quietly(async () => {
-      headless = String((await $.env.get('CLAUDE_CODE_ENTRYPOINT')) ?? '').startsWith('sdk')
-      if (!headless) {
-        $.clock.every(1000, async () => {
-          await watch($)
-          await quietly(() => refresh($))  // 오래 남은 대기(30분)는 쉬는 동안에도 버린다
-          if ((activity !== 'idle' || background > 0) && (await $.clock.now()) - shared > BEAT) await quietly(() => share($))
-        })
-        // 처음 설치한 컴퓨터에 Python이나 numpy · Pillow가 없으면 시계가 뜨지 않는다. 조용히 끝나지 않게 한 번 알린다
-        if (await wanted($)) {
-          void summon($).then(ok => {
-            if (!ok) $.ui.toast(NO_CLOCK)
-          })
-        }
-      }
-    })
-    await quietly(() => $.command.register({ name: 'tokens', description: 'Open the token usage pane · 토큰 사용량 패널' }))
-    await quietly(() => $.command.register({ name: 'clock', description: 'Show the desktop token clock (/clock off hides it) · 토큰 계기판 시계' }))
-    // 사용량은 바탕화면 시계로 본다. 앱 안 패널은 세션이 시작될 때 열지 않고, 열려 있던 것도 닫는다. /tokens 로만 연다
-    void quietly(() => $.ui.close({ id: PANE }))
-    await quietly(async () => {
-      const usage = await $.session.usage()
-      await update($, meter, () => ({
-        limits: toLimits(usage.rateLimits),
-        contextTokens: usage.context.tokens,
-        contextWindow: usage.context.window,
-      }))
-      await share($)
-    })
+    await boot($)
 
     return next(e)
   })
@@ -368,7 +416,7 @@ export const register: Register = on => {
     await $.fs.write(await clockPath($), JSON.stringify({ on: !off }))
     if (off) return { text: 'Clock hidden. /clock shows it again. · 시계를 껐습니다.' }
 
-    return { text: (await summon($)) ? 'Clock shown. · 시계를 켰습니다.' : NO_CLOCK }
+    return { text: (await show($)) ? 'Clock shown. · 시계를 켰습니다.' : NO_CLOCK }
   })
 
   on('command.run', { command: 'tokens' }, async $ => {
@@ -502,6 +550,7 @@ export const register: Register = on => {
   })
 
   on('prompt.submit', async ($, e, next) => {
+    if (!booted) await boot($)
     if (!headless && isPerson(e)) {
       await quietly(async () => {
         await claim($, await $.session.id())

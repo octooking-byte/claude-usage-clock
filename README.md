@@ -7,44 +7,39 @@ A desktop mechanical clock for Claude Code. It shows how much of your 5-hour lim
 <img src="docs/demo-lights.gif" width="420" alt="Claude Usage Clock: the big dial glows while Claude works, blinks while it waits for you, then the CHAT dial glows for a background task">
 
 - **No tokens.** The clock never calls a model. It reads a small file the mod writes.
-- **No network.** Nothing leaves your computer.
+- **Nothing leaves your computer.** The only download is the clock's own parts, once, the first time.
 - **Windows 10 or later.** macOS and Linux are tracked in issues (see below).
 
 ## Do you need it?
 
 | You use Claude through | Can you use the clock? |
 |---|---|
-| Claude Code on Windows (desktop app, terminal or IDE) **with** Python 3 | Yes. Install the mod and two Python packages. |
-| Claude Code on Windows **without** Python | Yes. Install the mod and the ready-made clock from Releases. |
+| Claude Code on Windows (desktop app, terminal or IDE) | Yes. Python is not needed. |
 | Claude Code on macOS or Linux | Not yet. Up-vote the [platform issues](../../issues?q=label%3Aplatform). |
 | OpenAI Codex | Not yet. The clock reads data that only Claude Code writes. Up-vote the Codex issue among the [platform issues](../../issues?q=label%3Aplatform). |
 | claude.ai in a browser, or the phone app | You do not need it. The clock reads data that only Claude Code writes. |
 
 ## Install
 
-**1. Add the mod.** In a terminal session of Claude Code:
+Type this one line in Claude Code:
 
 ```
 /plugin install token-usage-clock --marketplace octooking-byte/claude-usage-clock
 ```
 
-Answer `y` to add the marketplace, then pick a scope. This one-line form needs Claude Code v2.1.275 or later. On an older version, run these two lines in your shell instead:
+Answer `y`, then press Enter. That is all. The first time, the mod sets up the clock by itself (about a minute) and the clock appears on your desktop. If it does not, type `/clock`.
 
-```
-claude plugin marketplace add octooking-byte/claude-usage-clock
-claude plugin install token-usage-clock@token-usage-clock
-```
+<details>
+<summary>Other ways to install</summary>
 
-In the desktop app, where `/plugin` does not run: click **+** next to the prompt box → **Plugins** → **Add marketplace** `octooking-byte/claude-usage-clock` → **Add plugin**.
-
-**2. Give the clock something to run on.** Pick one.
-
-| | Steps |
-|---|---|
-| I have Python 3 | `py -3 -m pip install numpy pillow` |
-| I do not have Python | Download `token-clock-windows.zip` from [Releases](../../releases) and unzip it into `%LOCALAPPDATA%\TokenClock\`. Each release lists its antivirus scan result. |
-
-**3. Restart Claude Code.** In the desktop app, quit it from the tray icon (closing the window is not enough), then open it again. The clock appears when a session starts.
+- Desktop app, if `/plugin` does not run: **+** next to the prompt box → **Plugins** → **Add marketplace** `octooking-byte/claude-usage-clock` → **Add plugin**.
+- Claude Code older than v2.1.275, from a shell:
+  ```
+  claude plugin marketplace add octooking-byte/claude-usage-clock
+  claude plugin install token-usage-clock@token-usage-clock
+  ```
+- What the first-time setup does: with Python 3, it installs `numpy` and `pillow` (`py -3 -m pip install --user numpy pillow`). Without Python, it downloads `token-clock-windows.zip` from this repository's [Releases](../../releases), checks its SHA-256 fingerprint, and unzips it into `%LOCALAPPDATA%\TokenClock\`. You can do either by hand instead.
+</details>
 
 ## Reading the clock
 
@@ -168,7 +163,7 @@ Position, size, layout, colour and face are remembered.
 
 The mod (`hooks/register.tsx`) runs inside Claude Code and writes usage and status to `~/.claude/progress/token-panel.json`. The clock (`window/`) is a separate Python window that reads that file and draws each frame with NumPy and Pillow. It uses well under 1% of one CPU core while idle and about 115 MB of memory.
 
-Everything the mod runs: the clock (`py -3 window/launch.py`, or `token-clock.exe` when Python is missing), `reg query HKCU\Control Panel\International /v LocaleName` once per session to pick Korean or English, and `/compact` on the main session when you pull the crown. It reads and writes files only in `~/.claude/progress/`. It sends nothing over the network.
+Everything the mod runs: the clock (`py -3 window/launch.py`, or `token-clock.exe` when Python is missing), `reg query HKCU\Control Panel\International /v LocaleName` once per session to pick Korean or English, and `/compact` on the main session when you pull the crown. Only when the clock cannot start, once: `pip install --user numpy pillow`, or a PowerShell download of `token-clock-windows.zip` from this repository's Releases, kept only if its SHA-256 matches the one in `hooks/register.tsx`. It reads and writes files only in `~/.claude/progress/` (and `%LOCALAPPDATA%\TokenClock\` for that download). It sends nothing about you or your usage anywhere.
 
 The plugin also adds a `token-usage-clock` skill, so you can ask Claude what a light means or why the clock does not appear.
 

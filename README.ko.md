@@ -7,43 +7,39 @@ Claude Code의 5시간 한도, 주간 한도, 대화 크기를 바탕화면 위 
 <img src="docs/demo-lights.gif" width="420" alt="Claude가 일하면 큰 시계가 빛나고, 나를 기다리면 깜빡이고, 백그라운드 작업이 돌면 CHAT 시계가 빛난다">
 
 - **토큰을 쓰지 않습니다.** 시계는 모델을 부르지 않고, 모드가 적는 작은 파일만 읽습니다.
-- **인터넷을 쓰지 않습니다.** 컴퓨터 밖으로 나가는 것이 없습니다.
+- **컴퓨터 밖으로 나가는 것이 없습니다.** 받는 것은 처음 한 번, 시계 자신의 부품뿐입니다.
 - **Windows 10 이상.** 맥과 리눅스는 이슈로 관리합니다(아래 표).
 
 ## 나에게 필요한가요?
 
 | Claude를 쓰는 곳 | 시계를 쓸 수 있나 |
 |---|---|
-| Windows의 Claude Code(데스크톱 앱 · 터미널 · IDE), 파이썬 3 **있음** | 됩니다. 모드와 파이썬 꾸러미 둘을 깝니다 |
-| Windows의 Claude Code, 파이썬 **없음** | 됩니다. 모드와 Releases의 실행 파일을 깝니다 |
+| Windows의 Claude Code(데스크톱 앱 · 터미널 · IDE) | 됩니다. 파이썬이 없어도 됩니다 |
 | 맥이나 리눅스의 Claude Code | 아직 안 됩니다. [플랫폼 이슈](../../issues?q=label%3Aplatform)에 👍를 눌러 주세요 |
 | OpenAI 코덱스(Codex) | 아직 안 됩니다. 시계는 Claude Code가 적는 자료만 읽습니다. [플랫폼 이슈](../../issues?q=label%3Aplatform)의 코덱스 이슈에 👍를 눌러 주세요 |
 | 브라우저의 claude.ai나 휴대폰 앱만 | 필요 없습니다. 시계는 Claude Code만 적는 자료를 읽습니다 |
 
 ## 설치
 
-**1. 모드를 넣습니다.** Claude Code 터미널 세션에서:
+Claude Code 입력창에 이 한 줄을 넣습니다.
 
 ```
 /plugin install token-usage-clock --marketplace octooking-byte/claude-usage-clock
 ```
 
-마켓플레이스를 더할지 물으면 `y`, 그다음 범위를 고릅니다. 이 한 줄 설치는 Claude Code v2.1.275 이상에서 됩니다. 그보다 옛 판이면 셸에서 아래 두 줄을 대신 칩니다.
+`y`를 누르고 Enter. 끝입니다. 처음 한 번은 모드가 시계를 스스로 준비하고(1분쯤) 바탕화면에 시계가 뜹니다. 안 뜨면 `/clock`을 입력합니다.
 
-```
-claude plugin marketplace add octooking-byte/claude-usage-clock
-claude plugin install token-usage-clock@token-usage-clock
-```
- `/plugin`이 안 되는 데스크톱 앱에서는 입력창 옆 **+** → **Plugins** → **Add marketplace**에 `octooking-byte/claude-usage-clock` → **Add plugin**.
+<details>
+<summary>다른 설치 방법</summary>
 
-**2. 시계가 돌 바탕을 고릅니다.** 둘 중 하나.
-
-| | 할 일 |
-|---|---|
-| 파이썬 3이 있다 | `py -3 -m pip install numpy pillow` |
-| 파이썬이 없다 | [Releases](../../releases)에서 `token-clock-windows.zip`을 받아 `%LOCALAPPDATA%\TokenClock\`에 풉니다. 판마다 백신 검사 결과를 함께 올립니다 |
-
-**3. Claude Code를 다시 켭니다.** 데스크톱 앱은 트레이 아이콘에서 완전히 종료한 뒤 다시 엽니다(창만 닫으면 안 됩니다). 세션이 시작되면 시계가 뜹니다.
+- `/plugin`이 안 되는 데스크톱 앱: 입력창 옆 **+** → **Plugins** → **Add marketplace**에 `octooking-byte/claude-usage-clock` → **Add plugin**.
+- v2.1.275보다 옛 Claude Code, 셸에서:
+  ```
+  claude plugin marketplace add octooking-byte/claude-usage-clock
+  claude plugin install token-usage-clock@token-usage-clock
+  ```
+- 처음 준비가 하는 일: 파이썬 3이 있으면 `numpy` · `pillow`를 깝니다(`py -3 -m pip install --user numpy pillow`). 없으면 이 저장소 [Releases](../../releases)의 `token-clock-windows.zip`을 받아 SHA-256 지문을 맞춰 본 뒤 `%LOCALAPPDATA%\TokenClock\`에 풉니다. 둘 다 손으로 해도 됩니다.
+</details>
 
 ## 시계 읽는 법
 
@@ -167,7 +163,7 @@ Claude Code 창(세션)을 여러 개 열어도 시계는 하나입니다. 시�
 
 모드(`hooks/register.tsx`)가 Claude Code 안에서 사용량과 상태를 `~/.claude/progress/token-panel.json`에 적습니다. 시계(`window/`)는 따로 도는 파이썬 창으로, 그 파일만 읽고 NumPy와 Pillow로 그림을 그립니다. 가만히 있을 때 CPU 코어 하나의 1% 미만, 메모리 약 115MB를 씁니다.
 
-모드가 실행하는 것은 이것뿐입니다: 시계(`py -3 window/launch.py`, 파이썬이 없으면 `token-clock.exe`), 한국어 · 영어를 고르려고 세션마다 한 번 `reg query HKCU\Control Panel\International /v LocaleName`, 용두를 당겼을 때 메인 세션의 `/compact`. 파일은 `~/.claude/progress/` 안에서만 읽고 씁니다. 인터넷으로는 아무것도 보내지 않습니다.
+모드가 실행하는 것은 이것뿐입니다: 시계(`py -3 window/launch.py`, 파이썬이 없으면 `token-clock.exe`), 한국어 · 영어를 고르려고 세션마다 한 번 `reg query HKCU\Control Panel\International /v LocaleName`, 용두를 당겼을 때 메인 세션의 `/compact`. 시계가 뜨지 못할 때만 한 번: `pip install --user numpy pillow`, 또는 PowerShell로 이 저장소 Releases의 `token-clock-windows.zip`을 받고 `hooks/register.tsx`에 적힌 SHA-256과 같을 때만 남깁니다. 파일은 `~/.claude/progress/` 안에서만 읽고 씁니다(그 받기만 `%LOCALAPPDATA%\TokenClock\`). 사용자나 사용량에 관한 것은 어디로도 보내지 않습니다.
 
 모드에는 `token-usage-clock` 스킬도 들어 있어, 빛이 무슨 뜻인지나 시계가 왜 안 뜨는지 Claude에게 물어볼 수 있습니다.
 
