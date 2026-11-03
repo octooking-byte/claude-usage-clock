@@ -21,18 +21,20 @@ A desktop mechanical clock for Claude Code. It shows how much of your 5-hour lim
 
 ## Install
 
-Type this one line in Claude Code:
+| Where you use Claude Code | How to install |
+|---|---|
+| Terminal (`claude`), VS Code | Type the line below at the prompt → `y` → Enter |
+| Claude desktop app | **+** next to the prompt box → **Plugins** → **Add marketplace** `octooking-byte/claude-usage-clock` → **Add plugin**. `/plugin` does not run in the desktop app's Code tab |
 
 ```
 /plugin install token-usage-clock --marketplace octooking-byte/claude-usage-clock
 ```
 
-Answer `y`, then press Enter. That is all. The first time, the mod sets up the clock by itself (about a minute) and the clock appears on your desktop. If it does not, type `/clock`.
+That is all. The first time, the mod sets up the clock by itself (about a minute) and the clock appears on your desktop. If it does not, type `/clock`.
 
 <details>
 <summary>Other ways to install</summary>
 
-- Desktop app, if `/plugin` does not run: **+** next to the prompt box → **Plugins** → **Add marketplace** `octooking-byte/claude-usage-clock` → **Add plugin**.
 - Claude Code older than v2.1.275, from a shell:
   ```
   claude plugin marketplace add octooking-byte/claude-usage-clock

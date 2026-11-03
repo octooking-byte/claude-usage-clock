@@ -13,7 +13,7 @@ export async function language($: any) {
   const set = String((await $.env.get('TOKEN_PANEL_LANG')) ?? '').toLowerCase()
   if (set === 'ko' || set === 'en') return set === 'ko'
   try {
-    const { stdout } = await $.process.run(['reg', 'query', 'HKCU\\Control Panel\\International', '/v', 'LocaleName'], { timeoutMs: 3000 })
+    const { stdout } = await $.process.run(['reg', 'query', 'HKCU\\Control Panel\\International', '/v', 'LocaleName'], { cwd: $.plugin.root, timeoutMs: 3000 })
     return /\bko-/i.test(String(stdout ?? ''))
   } catch {
     return false
@@ -250,7 +250,7 @@ export async function summon($: any) {
   if (local) tries.push([`${local}/TokenClock/token-clock.exe`])
   for (const command of tries) {
     try {
-      if ((await $.process.run(command, { timeoutMs: 10000 })).exitCode === 0) return true
+      if ((await $.process.run(command, { cwd: $.plugin.root, timeoutMs: 10000 })).exitCode === 0) return true
     } catch {
       // 이 이름의 실행기가 없다. 다음을 본다.
     }
@@ -266,7 +266,8 @@ export function prepare($: any) {
     $.ui.toast(PREPARING, { timeoutMs: 8000 })
     for (const python of [['py', '-3'], ['python3'], ['python']]) {
       try {
-        const pip = await $.process.run([...python, '-m', 'pip', 'install', '--user', '--disable-pip-version-check', '-q', 'numpy', 'pillow'], { timeoutMs: 300000 })
+        // 세션 폴더는 남의 저장소일 수 있다. 거기 있는 pip.py · py.exe가 대신 돌지 않게 모드 폴더에서, -I(현재 폴더와 PYTHON* 환경 변수를 안 봄)로 돌린다
+        const pip = await $.process.run([...python, '-I', '-m', 'pip', 'install', '--user', '--disable-pip-version-check', '-q', 'numpy', 'pillow'], { cwd: $.plugin.root, timeoutMs: 300000 })
         if (pip.exitCode === 0 && (await summon($))) return true
         if (pip.exitCode === 0) break
       } catch {
@@ -282,7 +283,7 @@ export function prepare($: any) {
       "Expand-Archive -Force $zip (Join-Path $env:LOCALAPPDATA 'TokenClock'); Remove-Item $zip",
     ].join('; ')
     try {
-      const got = await $.process.run(['powershell', '-NoProfile', '-NonInteractive', '-Command', fetch], { timeoutMs: 600000 })
+      const got = await $.process.run(['powershell', '-NoProfile', '-NonInteractive', '-Command', fetch], { cwd: $.plugin.root, timeoutMs: 600000 })
       if (got.exitCode === 0 && (await summon($))) return true
     } catch {
       // 받지 못했다. 아래에서 알린다.

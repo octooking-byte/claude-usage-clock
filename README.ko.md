@@ -21,18 +21,20 @@ Claude Code의 5시간 한도, 주간 한도, 대화 크기를 바탕화면 위 
 
 ## 설치
 
-Claude Code 입력창에 이 한 줄을 넣습니다.
+| 어디서 쓰나 | 이렇게 깝니다 |
+|---|---|
+| 터미널(`claude`), VS Code | 입력창에 아래 한 줄 → `y` → Enter |
+| Claude 데스크톱 앱 | 입력창 옆 **+** → **Plugins** → **Add marketplace**에 `octooking-byte/claude-usage-clock` → **Add plugin**. 데스크톱 앱의 Code 탭에서는 `/plugin`이 돌지 않습니다 |
 
 ```
 /plugin install token-usage-clock --marketplace octooking-byte/claude-usage-clock
 ```
 
-`y`를 누르고 Enter. 끝입니다. 처음 한 번은 모드가 시계를 스스로 준비하고(1분쯤) 바탕화면에 시계가 뜹니다. 안 뜨면 `/clock`을 입력합니다.
+끝입니다. 처음 한 번은 모드가 시계를 스스로 준비하고(1분쯤) 바탕화면에 시계가 뜹니다. 안 뜨면 `/clock`을 입력합니다.
 
 <details>
 <summary>다른 설치 방법</summary>
 
-- `/plugin`이 안 되는 데스크톱 앱: 입력창 옆 **+** → **Plugins** → **Add marketplace**에 `octooking-byte/claude-usage-clock` → **Add plugin**.
 - v2.1.275보다 옛 Claude Code, 셸에서:
   ```
   claude plugin marketplace add octooking-byte/claude-usage-clock
