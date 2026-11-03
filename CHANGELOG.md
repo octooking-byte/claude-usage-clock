@@ -4,9 +4,14 @@ All notable changes to this project are listed here. The format follows [Keep a 
 
 ## [Unreleased]
 
+## [0.1.4] - 2026-11-04
+
 ### Added
 - `THIRD-PARTY-NOTICES.txt` inside the clock zip: the licences of Python, NumPy (with OpenBLAS), Pillow and the PyInstaller bootloader that the exe redistributes.
-- `SECURITY.md`, `CODE_OF_CONDUCT.md` and this changelog.
+- `SECURITY.md`, `CODE_OF_CONDUCT.md` and this changelog. Private vulnerability reporting is on.
+
+### Changed
+- Without Python, the mod downloads the v0.1.4 clock build (same clock, now with the licence notices).
 
 ## [0.1.3] - 2026-11-04
 
@@ -37,7 +42,8 @@ All notable changes to this project are listed here. The format follows [Keep a 
 ### Added
 - First public release.
 
-[Unreleased]: https://github.com/octooking-byte/claude-usage-clock/compare/v0.1.2...HEAD
+[Unreleased]: https://github.com/octooking-byte/claude-usage-clock/compare/v0.1.4...HEAD
+[0.1.4]: https://github.com/octooking-byte/claude-usage-clock/releases/tag/v0.1.4
 [0.1.3]: https://github.com/octooking-byte/claude-usage-clock/commit/b5e7b6e
 [0.1.2]: https://github.com/octooking-byte/claude-usage-clock/releases/tag/v0.1.2
 [0.1.1]: https://github.com/octooking-byte/claude-usage-clock/commit/d318b99
