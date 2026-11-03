@@ -151,7 +151,7 @@ Claude Code 창(세션)을 여러 개 열어도 시계는 하나입니다. 시�
 
 | 증상 | 해결 |
 |---|---|
-| 시계가 뜨지 않습니다 | 2단계를 확인하고 `/clock`을 입력합니다. 못 띄우면 알림이 뜹니다 |
+| 시계가 뜨지 않습니다 | `/clock`을 입력합니다. 처음에는 준비에 1분쯤 걸립니다. 못 띄우면 알림이 뜨고, 까닭은 `%USERPROFILE%\.claude\progress\token-panel-start.log`에 남습니다 |
 | 바늘이 움직이지 않습니다 | 모드가 켜져 있는지 봅니다. 한 시간 넘게 값이 오지 않으면 시계가 흐려집니다 |
 | Claude가 일하는데 빛이 없습니다 | 모드를 넣거나 바꿨다면 Claude Code를 완전히 종료한 뒤 다시 켭니다 |
 | 도는 작업이 없는데 CHAT 빛이 켜져 있습니다 | `%USERPROFILE%\.claude\progress\token-panel.json`의 `backgroundTasks`에 그 작업이 남습니다. 작업이 끝나면 다음 답이 끝날 때 꺼집니다 |

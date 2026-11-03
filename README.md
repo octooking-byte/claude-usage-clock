@@ -151,7 +151,7 @@ Position, size, layout, colour and face are remembered.
 
 | Problem | Fix |
 |---|---|
-| The clock does not appear | Check step 2, then type `/clock`. A notice tells you if the clock could not start. |
+| The clock does not appear | Type `/clock`. The first time it takes about a minute to set up. A notice tells you if the clock could not start; the reason is in `%USERPROFILE%\.claude\progress\token-panel-start.log`. |
 | Hands do not move | Make sure the mod is enabled. The clock fades if no data arrives for an hour. |
 | No glow while Claude works | After installing or updating the mod, fully quit and restart Claude Code. |
 | CHAT glows with nothing running | `%USERPROFILE%\.claude\progress\token-panel.json` lists the task under `backgroundTasks`. The light goes out after the next answer once that task ends. |
