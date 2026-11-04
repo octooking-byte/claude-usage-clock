@@ -4,7 +4,7 @@ A desktop mechanical clock for Claude Code. It shows how much of your 5-hour lim
 
 [한국어](README.ko.md)
 
-<img src="docs/demo-lights.gif" width="420" alt="Claude Usage Clock: the big dial glows while Claude works, blinks while it waits for you, then the CHAT dial glows for a background task">
+<img src="docs/demo-lights-en.gif" width="480" alt="Claude Usage Clock in four scenes: the big dial glows while Claude writes, blinks while a permission prompt or question waits for you, the CHAT dial glows while a background task runs, and both glow when both happen">
 
 - **No tokens.** The clock never calls a model. It reads a small file the mod writes.
 - **Nothing leaves your computer.** The only download is the clock's own parts, once, the first time.
@@ -57,11 +57,14 @@ Three dials, two lights. That is all you need day to day.
 | **WEEK** | Share of the 7-day weekly limit used | 80% used |
 | **CHAT** | How much of Claude's context window (what it can hold in one conversation) the current conversation fills | 80% full, a sign the conversation will soon need compacting |
 
+**Reading the lights.** The clock tells you with light what Claude is doing, so you know when it is your turn without looking at the window. The GIF at the top shows all four.
+
 | Light | Means |
 |---|---|
 | Big dial glows | Claude is writing an answer in the main Claude window (the session the clock follows). It also glows while you press or hold any dial |
 | Big dial blinks | A permission prompt or a question in the main Claude window is waiting for you |
 | CHAT dial glows | A background task (agent, workflow, monitor) is running in the main Claude window |
+| Both glow | Claude is answering while a background task also runs. The two lights turn on and off independently |
 
 When a limit resets, the hand swings to the top, settles on the new value and a blue ring spreads.
 
